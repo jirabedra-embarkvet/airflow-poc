@@ -1,7 +1,7 @@
 In order to run the PoC:
 1. assume a valid role in infrastructure-engineering in a terminal 
 aws sts assume-role --role-arn {role-arn} --role-session-name {role-session-name}
-2. deploy the infra stack using the stack.yaml CloudFormation template
+2. deploy the infra stack using the /templates/stack.yaml CloudFormation template
 aws cloudformation deploy --stack-name airflow-poc --template-file templates/stack.yaml
 3. Once the stack is deployed connect to the cluster
 aws eks update-kubeconfig --region us-east-1 --name airflow-poc-cluster
