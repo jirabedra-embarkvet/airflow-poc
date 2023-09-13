@@ -1,0 +1,17 @@
+Nodegroup:
+  Type: AWS::EKS::Nodegroup
+  Properties: 
+    ClusterName: "airflow-poc-cluster"
+    InstanceTypes: 
+      - "t3.medium"
+    NodegroupName: "general-ng"
+    NodeRole: "arn:aws:iam::763216446258:role/Dev-EKS-Node-Role"
+    Subnets: 
+      - "subnet-04e9d0c9f1940f570"
+      - "subnet-0109e0d73006b4bc8"
+      - "subnet-0b53051eca496e1f9"
+    Tags: 
+      - Key: "created-by"
+        Value: "juan.irabedra"
+      - Key: "created-at"
+        Value: "09-11-23"

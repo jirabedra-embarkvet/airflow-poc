@@ -1,0 +1,17 @@
+Resources:
+  Cluster:
+    Type: AWS::EKS::Cluster
+    Properties: 
+      Name: "airflow-poc-cluster"
+      ResourcesVpcConfig: 
+        SubnetIds:
+          - "subnet-04e9d0c9f1940f570"
+          - "subnet-0109e0d73006b4bc8"
+          - "subnet-0b53051eca496e1f9"
+      RoleArn: "arn:aws:iam::763216446258:role/Dev-EKS-Cluster-Role"
+      Tags: 
+        - Key: "created-by"
+          Value: "juan.irabedra"
+        - Key: "created-at"
+          Value: "09-11-23"
+  

@@ -1,0 +1,41 @@
+Resources:
+  Cluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Name: "airflow-poc-cluster"
+      ResourcesVpcConfig:
+        SubnetIds:
+          - "subnet-04e9d0c9f1940f570"
+          - "subnet-0109e0d73006b4bc8"
+          - "subnet-0b53051eca496e1f9"
+      RoleArn: "arn:aws:iam::763216446258:role/Dev-EKS-Cluster-Role"
+      Tags:
+        - Key: "created-by"
+          Value: "juan.irabedra"
+  Nodegroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      ClusterName: airflow-poc-cluster
+      InstanceTypes:
+        - "t3.medium"
+      NodegroupName: "general-ng"
+      ScalingConfig:
+           MinSize: 3
+           DesiredSize: 4
+           MaxSize: 5
+      NodeRole: "arn:aws:iam::763216446258:role/Dev-EKS-Node-Role"
+      Subnets:
+        - subnet-04e9d0c9f1940f570
+        - subnet-0109e0d73006b4bc8
+        - subnet-0b53051eca496e1f9
+    DependsOn:
+         - "Cluster"
+  Volume:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: us-east-1a
+      VolumeType: gp3
+      Size: 6
+      Tags:
+        - Key: "created-by"
+          Value: "juan.irabedra"
