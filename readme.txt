@@ -11,5 +11,12 @@ ip-172-31-3-35.ec2.internal     Ready    <none>   25m   v1.27.4-eks-8ccc7ba
 ip-172-31-31-104.ec2.internal   Ready    <none>   25m   v1.27.4-eks-8ccc7ba
 ip-172-31-64-131.ec2.internal   Ready    <none>   26m   v1.27.4-eks-8ccc7ba
 ip-172-31-64-87.ec2.internal    Ready    <none>   25m   v1.27.4-eks-8ccc7ba
-
-
+5. Create an IAM OIDC Identity provider for the cluster
+First check if there is no OIDC provider in the cluster yet:
+oidc_id=$(aws eks describe-cluster --name airflow-poc-cluster --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+if no output is provided, then run
+eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
+if output was provided, ignore the preovious command.
+6. create serviceaccount within cluster to provide airflow namespace with capabilities to access aws services
+eksctl create iamserviceaccount --name airflow-binary-sa --namespace airflow --cluster airflow-poc-cluster --role-name airflow-binary-sa-role \
+    --attach-role-arn arn:aws:iam::763216446258:role/airflow-poc-eks-user-role --approve
