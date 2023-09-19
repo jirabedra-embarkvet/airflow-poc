@@ -11,12 +11,24 @@ ip-172-31-3-35.ec2.internal     Ready    <none>   25m   v1.27.4-eks-8ccc7ba
 ip-172-31-31-104.ec2.internal   Ready    <none>   25m   v1.27.4-eks-8ccc7ba
 ip-172-31-64-131.ec2.internal   Ready    <none>   26m   v1.27.4-eks-8ccc7ba
 ip-172-31-64-87.ec2.internal    Ready    <none>   25m   v1.27.4-eks-8ccc7ba
-5. Create an IAM OIDC Identity provider for the cluster
-First check if there is no OIDC provider in the cluster yet:
-oidc_id=$(aws eks describe-cluster --name airflow-poc-cluster --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
-if no output is provided, then run
-eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
-if output was provided, ignore the preovious command.
-6. create serviceaccount within cluster to provide airflow namespace with capabilities to access aws services
-eksctl create iamserviceaccount --name airflow-binary-sa --namespace airflow --cluster airflow-poc-cluster --role-name airflow-binary-sa-role \
-    --attach-role-arn arn:aws:iam::763216446258:role/airflow-poc-eks-user-role --approve
+5. Manually add OIDC provider trusted entity to EBSCSI Driver policy
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/27E460D354237B681F8F60D14F0CE780"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.us-east-1.amazonaws.com/id/27E460D354237B681F8F60D14F0CE780:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+                }
+            }
+        }
+using the EKS cluster OIDC provider id.
+6. Install EBS CSI EKS plugin
+eksctl create addon --name aws-ebs-csi-driver --cluster airflow-poc-cluster --service-account-role-arn arn:aws:iam::763216446258:role/AirflowPocEBSCSIDriverRole --force
+Check that the plugin is working by following https://docs.aws.amazon.com/eks/latest/userguide/ebs-sample-app.html guide
+7. Install Airflow Helm chart
+helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace
+8. Prepare EKS cluster for AWS Batch
+Follow https://docs.aws.amazon.com/batch/latest/userguide/getting-started-eks.html#getting-started-eks-step-1

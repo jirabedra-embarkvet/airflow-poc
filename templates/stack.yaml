@@ -1,4 +1,30 @@
 Resources:
+  AirflowPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties: 
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+                - "ec2:AttachVolume"
+                - "ec2:CreateSnapshot"
+                - "ec2:CreateTags"
+                - "ec2:CreateVolume"
+                - "ec2:DeleteSnapshot"
+                - "ec2:DeleteTags"
+                - "ec2:DeleteVolume"
+                - "ec2:DescribeAvailabilityZones"
+                - "ec2:DescribeInstances"
+                - "ec2:DescribeSnapshots"
+                - "ec2:DescribeTags"
+                - "ec2:DescribeVolumes"
+                - "ec2:DescribeVolumesModifications"
+                - "ec2:DetachVolume"
+                - "ec2:ModifyVolume"
+            Resource: '*'
+      ManagedPolicyName: AirflowBatchPolicy
+    DependsOn: Cluster
   ClusterRole:
     Type: AWS::IAM::Role
     Properties:
@@ -36,7 +62,9 @@ Resources:
         - arn:aws:iam::aws:policy/AWSBatchFullAccess
         - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
         - arn:aws:iam::aws:policy/CloudWatchFullAccess
+        - !GetAtt AirflowPolicy.PolicyArn
       RoleName: airflow-poc-eks-node-role
+    DependsOn: AirflowPolicy
   UserRole:
     Type: AWS::IAM::Role
     Properties:
@@ -52,15 +80,6 @@ Resources:
                 - ecs-tasks.amazonaws.com
             Action:
               - 'sts:AssumeRole'
-          - Effect: Allow
-            Principal:
-              Federated: 'arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/90527CCE2D71A4D967BD36E6C552E71E'
-            Action:
-              - 'sts:AssumeRoleWithWebIdentity'
-            Condition:
-              StringEquals:
-                "!GetAtt Cluster.OpenIdConnectIssuerUrl:sub" : 'system:serviceaccount:airflow:airflow-binary-sa'
-                "!GetAtt Cluster.OpenIdConnectIssuerUrl:aud" : 'sts.amazonaws.com'
       Description: 'Provides EKS cluster user permissions to consume services'
       ManagedPolicyArns: 
         - arn:aws:iam::aws:policy/AmazonECS_FullAccess
@@ -106,6 +125,23 @@ Resources:
     DependsOn:
          - "Cluster"
          - "NodeRole"
+  EbsCsiDriverRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 'eks.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        -  arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+        - !GetAtt AirflowPolicy.PolicyArn
+      RoleName: "AirflowPocEBSCSIDriverRole"
+    DependsOn: 
+      - "Cluster"
   Volume:
     Type: AWS::EC2::Volume
     Properties:
@@ -115,22 +151,4 @@ Resources:
       Tags:
         - Key: "created-by"
           Value: "juan.irabedra"
-  EbsCsiDriverRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument: 
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Federated: 'arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/B5B8593E5A40338B6D356CC679E3CA6C'
-            Action:
-              - 'sts:AssumeRoleWithWebIdentity'
-            Condition:
-              StringEquals:
-                "oidc.eks.us-east-1.amazonaws.com/id/B5B8593E5A40338B6D356CC679E3CA6C:aud": "sts.amazonaws.com"
-                "oidc.eks.us-east-1.amazonaws.com/id/B5B8593E5A40338B6D356CC679E3CA6C:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
-              ManagedPolicyArns:
-                -  arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
-      RoleName: "AirflowPocEBSCSIDriverRole"
-    DependsOn: "Cluster"
+      
