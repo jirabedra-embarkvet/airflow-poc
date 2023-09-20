@@ -16,7 +16,7 @@ default_args = {
 }
 
 with DAG(
-        dag_id='hello_world_dag_batch',
+        dag_id='hello-batch',
         schedule=None,
         schedule_interval=None,
         default_args=default_args,
@@ -25,10 +25,10 @@ with DAG(
 
     hello_world = BatchOperator(
         dag=dag,
-        task_id='hello_world',
-        job_name='hello_world_dag_batch',
-        job_definition='airflow-batch-job-def-test',
-        job_queue='at-scale-batch-queue-test',
+        task_id='hello-batch',
+        job_name='hello-batch',
+        job_definition='airflow-poc-jd',
+        job_queue='airflow-poc-jq',
         overrides={},
         max_retries=1,
         aws_conn_id='aws_embark',
