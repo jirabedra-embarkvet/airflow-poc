@@ -31,7 +31,6 @@ with DAG(
         job_queue='airflow-poc-jq',
         overrides={},
         max_retries=1,
-        aws_conn_id='aws_embark',
         region_name='us-east-1'
     )
 
