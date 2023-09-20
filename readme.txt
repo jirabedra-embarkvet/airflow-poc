@@ -33,6 +33,74 @@ helm upgrade --install airflow apache-airflow/airflow --namespace airflow --crea
 8. Prepare EKS cluster for AWS Batch
 Follow https://docs.aws.amazon.com/batch/latest/userguide/getting-started-eks.html#getting-started-eks-step-1
 9. Configure Airflow by updating Airflow config. In this repo, in airflow-config folder there is a sample configuration.
+
+Follow
+https://blog.devgenius.io/setting-up-apache-airflow-on-kubernetes-with-gitsync-beaac2e397f3
+
 To apply it run 
 helm upgrade --install airflow apache-airflow/airflow -f ./airflow-config/values.yaml
 In particular, enabling git-sync requires SSH auth to the repo to sync.
+
+10. Update the user role trust policy so that Airflow can assume the appropriate role.
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "eks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "batch.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:aud": "sts.amazonaws.com",
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:sub": "system:serviceaccount:flyte:flyte-backend-flyte-binary"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+	]
+}
+
+updating the OIDC Ids with the eks cluster's
+11. Before craeating batch resources in EKS, follow https://docs.aws.amazon.com/batch/latest/userguide/getting-started-eks.html#getting-started-eks-step-1
