@@ -16,16 +16,16 @@ default_args = {
 }
 
 with DAG(
-        dag_id='hello-batch',
+        dag_id='hello_batch',
         schedule=None,
         schedule_interval=None,
         default_args=default_args,
         max_active_runs=1,
 ) as dag:
 
-    hello_world = BatchOperator(
+    hello_batch = BatchOperator(
         dag=dag,
-        task_id='hello-batch',
+        task_id='hello_batch',
         job_name='hello-batch',
         job_definition='airflow-poc-jd',
         job_queue='airflow-poc-jq',
@@ -35,4 +35,4 @@ with DAG(
         region_name='us-east-1'
     )
 
-    hello_world
+    hello_batch
