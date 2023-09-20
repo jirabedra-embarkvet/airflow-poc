@@ -32,3 +32,7 @@ Check that the plugin is working by following https://docs.aws.amazon.com/eks/la
 helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace
 8. Prepare EKS cluster for AWS Batch
 Follow https://docs.aws.amazon.com/batch/latest/userguide/getting-started-eks.html#getting-started-eks-step-1
+9. Configure Airflow by updating Airflow config. In this repo, in airflow-config folder there is a sample configuration.
+To apply it run 
+helm upgrade --install airflow apache-airflow/airflow -f ./airflow-config/values.yaml
+In particular, enabling git-sync requires SSH auth to the repo to sync.
