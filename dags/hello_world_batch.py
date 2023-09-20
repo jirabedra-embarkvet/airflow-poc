@@ -25,7 +25,6 @@ with DAG(
 
     hello_world = BatchOperator(
         dag=dag,
-        depends_on_past=False,
         task_id='hello_world',
         job_name='hello_world_dag_batch',
         job_definition='airflow-batch-job-def-test',
@@ -37,6 +36,3 @@ with DAG(
     )
 
     hello_world
-
-if __name__ == "__main__":
-    dag.test()
