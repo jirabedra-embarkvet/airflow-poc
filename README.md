@@ -102,3 +102,67 @@ Ensure that you have SSH authentication set up for Git synchronization if you en
 
 That's it! Your PoC environment for Airflow on AWS infrastructure should now be set up and ready for use.
 
+## Step 10: Update User Role Trust Policy
+
+Update the user role trust policy so that Airflow can assume the appropriate role.
+
+```json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "eks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "batch.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:aud": "sts.amazonaws.com",
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:sub": "system:serviceaccount:flyte:flyte-backend-flyte-binary"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::763216446258:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "oidc.eks.us-east-1.amazonaws.com/id/47101D85FBCB245BADEED8CA4736785A:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+	]
+}```
