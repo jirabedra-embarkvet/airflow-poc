@@ -111,12 +111,12 @@ Resources:
     Properties:
       ClusterName: airflow-poc-cluster
       InstanceTypes:
-        - "t3.medium"
+        - "t3.large"
       NodegroupName: "general-ng"
       ScalingConfig:
-           MinSize: 3
-           DesiredSize: 4
-           MaxSize: 5
+           MinSize: 4
+           DesiredSize: 5
+           MaxSize: 6
       NodeRole: !GetAtt NodeRole.Arn
       Subnets:
         - subnet-04e9d0c9f1940f570
