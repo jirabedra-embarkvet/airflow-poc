@@ -30,7 +30,7 @@ with DAG(
         job_definition='airflow-poc-jd',
         job_queue='airflow-poc-jq',
         overrides={},
-        max_retries=1,
+        max_retries=10,
         region_name='us-east-1'
     )
 
