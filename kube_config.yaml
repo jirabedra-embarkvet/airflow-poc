@@ -1,0 +1,29 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJQ0JCVkFKZ2lIMFl3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TXpBNU1qVXhOelExTXpoYUZ3MHpNekE1TWpJeE56UTFNemhhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUURWMitYSDQ0bWIvaEFzVGl3eXphcUJZSE9oQWszNWlySGpNNnpLZ29CNTJqa1JYREtHWS9qbm5GM20KUGpiaERpVDZlcy90OGp6OEpKWVhSV29iam9RRFRLWTJqcVJvd2NDYTIvQnJJalZDSk1YM0IwNStkRnB3UU03VQpmWXZDVjRxMmlNNjlPZFJRNmNIZlNsdjJ3cFJsVTBqWmZxQkFvaFlxVy83TysrUGlvMjRveWhFcW1qdk92TnRzCi9lRVZiZWpzNlRQYkJ4K3Z4OGxNV3MybjhYK3BTd3BESlZuVHBvemFwZTE4YWZBOG5XOXVORWdEOVY1M3JPMWQKNkdWZ1VVQUMvQnBXWGphd1Q2cGtNMldsRGg0NkpXWDJKcE5tZ0V0MVhSWWlYVmVpaElRaDl4UmprMDdXSitWaApGbWNuOXJsU1ltUGJ0bUhnUVh3L0o4TFBXWmxKQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUMTZnVUtBeDhmVzZhUkVxOW5tRnJ5SjFZNFdUQVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQStWeDg5YmZLNwpia3FvY3BTbXVnUFJ3OTVVMHhHRzZ1WlNpUGxnd1lIVlpaOWl5ZUltbitpbXltVHUzbEorQ0Q1MG9rOXdmQmh0ClBwUnlMSGRqVHUrUHdRdVM2NWtmY3grVEw4Vm9MSkZJcXA1WUQwVmZWUjVBemxUVFE0Z1h5cmhHS2w1djVFS0gKNUIrWTI0SVNMZVkrTktpd1lmRnlaQjlUYjA0QjFTTWluZmdpVHBteDhIQk56NXB1ZDZ6MEFWdzJaZzV1TWI2cApMclQ3SUFxM0xSbGZGaU9iYjhKTm9RZ21obVZVcTRseFd5Vk1NeGdYSzJXNkE0YTFMMEJnc2Fhek12T2Y4bVNlCmxjeDd6RUkxakZRNW03L3lxTlVhcjFsajVzeGtoVEdaMXJQdDNLSjl3RzhYOWd2TUsyOUIwb1FCajJ0ejhQNzAKYUVaZUZReGYycitpCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    server: https://FF6423B04834BF82439659A3651A60BD.gr7.us-east-1.eks.amazonaws.com
+  name: arn:aws:eks:us-east-1:763216446258:cluster/airflow-poc-cluster
+contexts:
+- context:
+    cluster: arn:aws:eks:us-east-1:763216446258:cluster/airflow-poc-cluster
+    user: arn:aws:eks:us-east-1:763216446258:cluster/airflow-poc-cluster
+  name: aws
+current-context: aws
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:us-east-1:763216446258:cluster/airflow-poc-cluster
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - --region
+      - us-east-1
+      - eks
+      - get-token
+      - --cluster-name
+      - airflow-poc-cluster
+      - --output
+      - json
+      command: aws

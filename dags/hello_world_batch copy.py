@@ -31,7 +31,7 @@ with DAG(
         job_queue='airflow-poc-jq',
         overrides={},
         max_retries=10,
-        region_name='us-east-1'
+        region_name='us-east-1',
     )
 
     hello_batch

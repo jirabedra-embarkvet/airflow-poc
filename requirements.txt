@@ -1,2 +1,5 @@
 apache-airflow
 apache-airflow[amazon]
+kubernetes
+apache-airflow[cncf.kubernetes]
+apache-airflow-providers-cncf-kubernetes

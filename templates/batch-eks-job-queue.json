@@ -1,0 +1,10 @@
+ {
+    "jobQueueName": "airflow-poc-jq",
+    "priority": 10,
+    "computeEnvironmentOrder": [
+      {
+        "order": 1,
+        "computeEnvironment": "airflow-poc-ce"
+      }
+    ]
+  }
