@@ -1,0 +1,29 @@
+{
+  "jobDefinitionName": "airflow-poc-jd",
+  "type": "container",
+  "eksProperties": {
+    "podProperties": {
+      "hostNetwork": true,
+      "containers": [
+        {
+          "image": "public.ecr.aws/amazonlinux/amazonlinux:2",
+          "command": [
+            "sleep",
+            "60"
+          ],
+          "resources": {
+            "limits": {
+              "cpu": "1",
+              "memory": "1024Mi"
+            }
+          }
+        }
+      ],
+      "metadata": {
+        "labels": {
+          "environment": "test"
+        }
+      }
+    }
+  }
+}
