@@ -3,7 +3,7 @@ from airflow import DAG
 # Importing datetime and timedelta modules for scheduling the DAGs
 from datetime import timedelta, datetime
 # Importing operators 
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.amazon.aws.operators.batch import BatchOperator
 
 # Initiating the default_args
 default_args = {
@@ -19,7 +19,7 @@ dag = DAG(dag_id='hello-world-juan',
     )
 
  # Creating first task
-start = EmptyOperator(task_id
+start = BatchOperator(task_id
   = 'start', dag = dag)
 
 # Creating second task
