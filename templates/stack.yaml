@@ -40,6 +40,7 @@ Resources:
       Description: 'Provides basic EKS cluster permissions'
       ManagedPolicyArns: 
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
       RoleName: airflow-poc-eks-cluster-role
   NodeRole:
     Type: AWS::IAM::Role
@@ -90,6 +91,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSBatchFullAccess
         - arn:aws:iam::aws:policy/CloudWatchFullAccess
         - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
       RoleName: airflow-poc-eks-user-role
     DependsOn: "Cluster"
   Cluster:
