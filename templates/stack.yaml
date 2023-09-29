@@ -98,9 +98,10 @@ Resources:
       Name: "airflow-poc-cluster"
       ResourcesVpcConfig:
         SubnetIds:
-          - "subnet-04e9d0c9f1940f570"
-          - "subnet-0109e0d73006b4bc8"
-          - "subnet-0b53051eca496e1f9"
+          - "subnet-09e1707aa176f8c89"
+          - "subnet-027fb858b4bc37ee4"
+          - "subnet-07243de5096bad62c"
+          - "subnet-0a023361297003e49"
       RoleArn: !GetAtt ClusterRole.Arn
       Tags:
         - Key: "created-by"
@@ -119,9 +120,10 @@ Resources:
            MaxSize: 5
       NodeRole: !GetAtt NodeRole.Arn
       Subnets:
-        - subnet-04e9d0c9f1940f570
-        - subnet-0109e0d73006b4bc8
-        - subnet-0b53051eca496e1f9
+        - subnet-09e1707aa176f8c89
+        - subnet-027fb858b4bc37ee4
+        - subnet-07243de5096bad62c
+        - subnet-0a023361297003e49
     DependsOn:
          - "Cluster"
          - "NodeRole"
