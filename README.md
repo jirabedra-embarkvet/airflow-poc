@@ -22,7 +22,7 @@ Assume a valid role in infrastructure-engineering using the AWS CLI:
 
 Deploy the infrastructure stack using the CloudFormation template located at `/templates/stack.yaml`:
 
-`aws cloudformation deploy --stack-name airflow-poc --template-file templates/stack.yaml`
+`aws cloudformation deploy --stack-name airflow-poc --template-file templates/stack.yaml --capabilities CAPABILITY_NAMED_IAM`
 
 
 ## Step 3: Connect to the EKS Cluster
